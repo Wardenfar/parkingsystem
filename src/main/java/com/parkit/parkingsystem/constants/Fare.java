@@ -1,6 +1,11 @@
 package com.parkit.parkingsystem.constants;
 
 public class Fare {
+    // the bike price per hour
     public static final double BIKE_RATE_PER_HOUR = 1.0;
+    // the car price per hour
     public static final double CAR_RATE_PER_HOUR = 1.5;
+
+    // the free time threshold : below this time, the user will not pay
+    public static final double FREE_HOUR_THRESHOLD = 0.5;
 }

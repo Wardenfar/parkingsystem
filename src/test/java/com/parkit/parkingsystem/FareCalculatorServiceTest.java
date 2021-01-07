@@ -135,4 +135,24 @@ public class FareCalculatorServiceTest {
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
         assertEquals(price, 24 * Fare.BIKE_RATE_PER_HOUR);
     }
+
+    @Test
+    @DisplayName("Vérifie le tarif gratuit correspondant à 30 min")
+    public void calculateFreeFare30MinParkingTime() {
+        Date inTime = TestUtils.parseTime("2020/01/01 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/01 08:30");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        assertEquals(price, 0);
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif payant correspondant à 31 min")
+    public void calculateFare31MinParkingTime() {
+        Date inTime = TestUtils.parseTime("2020/01/01 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/01 08:31");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        assertTrue(price > 0); // 31 min / 1 Hour
+    }
 }
