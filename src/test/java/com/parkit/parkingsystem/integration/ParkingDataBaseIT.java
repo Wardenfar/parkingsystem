@@ -1,5 +1,6 @@
 package com.parkit.parkingsystem.integration;
 
+import com.parkit.parkingsystem.TestUtils;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
@@ -14,22 +15,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(fullyQualifiedNames = "com.parkit.parkingsystem.*")
+@ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 
     private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
@@ -62,10 +56,10 @@ public class ParkingDataBaseIT {
     public void testParkingACar() {
         // === Given
         ParkingService parkingService = helperSetupParkingService(ParkingType.CAR, "ABCDEF");
-        Date in = parseTime("2020/01/01 15:00");
+        Date inTime = TestUtils.parseTime("2020/01/01 15:00");
 
         // === When
-        setCurrentTime(parkingService, in);
+        setCurrentTime(parkingService, inTime);
         parkingService.processIncomingVehicle();
 
         // === Then
@@ -78,7 +72,7 @@ public class ParkingDataBaseIT {
         assertNotNull(ticket);
         assertEquals(ticket.getVehicleRegNumber(), "ABCDEF");
         assertEquals(ticket.getPrice(), 0);
-        assertEquals(ticket.getInTime().getTime(), in.getTime());
+        assertEquals(ticket.getInTime().getTime(), inTime.getTime());
         assertNull(ticket.getOutTime());
 
         // Test the parking spot
@@ -118,14 +112,14 @@ public class ParkingDataBaseIT {
     public void testParkingLotExitCar() {
         // === Given
         ParkingService parkingService = helperSetupParkingService(ParkingType.CAR, "ABCDEF");
-        Date in = parseTime("2020/01/01 15:00");
-        Date out = parseTime("2020/01/01 18:30");
+        Date inTime = TestUtils.parseTime("2020/01/01 15:00");
+        Date outTime = TestUtils.parseTime("2020/01/01 18:30");
 
         // === When
-        setCurrentTime(parkingService, in);
+        setCurrentTime(parkingService, inTime);
         parkingService.processIncomingVehicle();
 
-        setCurrentTime(parkingService, out);
+        setCurrentTime(parkingService, outTime);
         parkingService.processExitingVehicle();
 
         // === Then
@@ -137,8 +131,8 @@ public class ParkingDataBaseIT {
         // Test the ticket
         assertNotNull(ticket);
         assertEquals(ticket.getVehicleRegNumber(), "ABCDEF");
-        assertEquals(ticket.getInTime().getTime(), in.getTime());
-        assertEquals(ticket.getOutTime().getTime(), out.getTime());
+        assertEquals(ticket.getInTime().getTime(), inTime.getTime());
+        assertEquals(ticket.getOutTime().getTime(), outTime.getTime());
         assertEquals(3.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 
         // Test the parking spot
@@ -151,14 +145,14 @@ public class ParkingDataBaseIT {
     public void testParkingLotExitBike() {
         // === Given
         ParkingService parkingService = helperSetupParkingService(ParkingType.BIKE, "ABCDEF");
-        Date in = parseTime("2020/01/01 14:00");
-        Date out = parseTime("2020/01/01 18:30");
+        Date inTime = TestUtils.parseTime("2020/01/01 14:00");
+        Date outTime = TestUtils.parseTime("2020/01/01 18:30");
 
         // === When
-        setCurrentTime(parkingService, in);
+        setCurrentTime(parkingService, inTime);
         parkingService.processIncomingVehicle();
 
-        setCurrentTime(parkingService, out);
+        setCurrentTime(parkingService, outTime);
         parkingService.processExitingVehicle();
 
         // === Then
@@ -171,8 +165,8 @@ public class ParkingDataBaseIT {
         assertNotNull(ticket);
         assertEquals(ticket.getVehicleRegNumber(), "ABCDEF");
 
-        assertEquals(ticket.getInTime().getTime(), in.getTime());
-        assertEquals(ticket.getOutTime().getTime(), out.getTime());
+        assertEquals(ticket.getInTime().getTime(), inTime.getTime());
+        assertEquals(ticket.getOutTime().getTime(), outTime.getTime());
 
         assertEquals(4.5 * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
 
@@ -214,34 +208,18 @@ public class ParkingDataBaseIT {
             e.printStackTrace();
         }
 
-        return PowerMockito.spy(new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO));
-    }
-
-    /**
-     * Helper Function that parse a date time with the format : yyyy/MM/dd HH:mm
-     *
-     * @param timeString string with format : yyyy/MM/dd HH:mm
-     * @return the parsed date
-     */
-    public Date parseTime(String timeString) {
-        try {
-            DateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-            return format.parse(timeString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return spy(new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO));
     }
 
     /**
      * Helper Function that mock {@link ParkingService#getCurrentTime()} and set the return value from the parameter
      *
      * @param parkingService the affected parkingService
-     * @param time desired current time
+     * @param time           desired current time
      */
     public void setCurrentTime(ParkingService parkingService, Date time) {
         try {
-            PowerMockito.when(parkingService.getCurrentTime()).thenReturn(time);
+            when(parkingService.getCurrentTime()).thenReturn(time);
         } catch (Exception e) {
             e.printStackTrace();
         }
