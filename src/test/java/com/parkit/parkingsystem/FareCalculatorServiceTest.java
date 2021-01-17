@@ -155,4 +155,84 @@ public class FareCalculatorServiceTest {
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
         assertTrue(price > 0); // 31 min / 1 Hour
     }
+
+    @Test
+    @DisplayName("Vérifie le calcul du tarif voiture correspondant à 1h avec un utilisateur récurrent")
+    public void calculateFareCarRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/02 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/02 09:00");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, true);
+        assertEquals(price, Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+    }
+
+    @Test
+    @DisplayName("Vérifie le calcul du tarif vélo correspondant à 1h avec un utilisateur récurrent")
+    public void calculateFareBikeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/02 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/02 09:00");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
+        assertEquals(price, Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif vélo correspondant à moins d'une heure avec un utilisateur récurrent")
+    public void calculateFareBikeWithLessThanOneHourParkingTimeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/02 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/02 08:45");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
+        assertEquals(price, 0.75 * Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif voiture correspondant à moins d'une heure avec un utilisateur récurrent")
+    public void calculateFareCarWithLessThanOneHourParkingTimeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/02 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/02 08:45");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, true);
+        assertEquals(price, 0.75 * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif voiture correspondant à plus d'un jour avec un utilisateur récurrent")
+    public void calculateFareCarWithMoreThanADayParkingTimeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/02 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/03 08:00");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, true);
+        assertEquals(price, 24 * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif vélo correspondant à plus d'un jour avec un utilisateur récurrent")
+    public void calculateFareBikeWithMoreThanADayParkingTimeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/02 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/03 08:00");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
+        assertEquals(price, 24 * Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif gratuit correspondant à 30 min avec un utilisateur récurrent")
+    public void calculateFreeFare30MinParkingTimeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/01 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/01 08:30");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
+        assertEquals(price, 0);
+    }
+
+    @Test
+    @DisplayName("Vérifie le tarif payant correspondant à 31 min avec un utilisateur récurrent")
+    public void calculateFare31MinParkingTimeRecurrentUser() {
+        Date inTime = TestUtils.parseTime("2020/01/01 08:00");
+        Date outTime = TestUtils.parseTime("2020/01/01 08:31");
+
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
+        assertTrue(price > 0); // 31 min / 1 Hour
+    }
 }
