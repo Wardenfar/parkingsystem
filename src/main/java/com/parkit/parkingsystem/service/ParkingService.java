@@ -11,6 +11,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 
+/**
+ * The Parking Service manage incoming and exiting vehicle
+ * This prompt the user with {@link InputReaderUtil}
+ */
 public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
@@ -27,6 +31,9 @@ public class ParkingService {
         this.ticketDAO = ticketDAO;
     }
 
+    /**
+     * Insert incoming vehicle in database
+     */
     public void processIncomingVehicle() {
         try {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
@@ -54,11 +61,22 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Prompt the user his reg number
+     *
+     * @return the entered reg number
+     * @throws Exception
+     */
     private String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
     }
 
+    /**
+     * Return the next available parking spot with the corresponding vehicle type from the database
+     *
+     * @return the parking spot
+     */
     public ParkingSpot getNextParkingNumberIfAvailable() {
         int parkingNumber = 0;
         ParkingSpot parkingSpot = null;
@@ -78,6 +96,12 @@ public class ParkingService {
         return parkingSpot;
     }
 
+
+    /**
+     * Prompt the user his Vehicle Type
+     *
+     * @return the parking type
+     */
     private ParkingType getVehichleType() {
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
@@ -97,6 +121,9 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Exit the vehicle and calculate the fare
+     */
     public void processExitingVehicle() {
         try {
             String vehicleRegNumber = getVehichleRegNumber();
@@ -122,6 +149,12 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Method to get the current time.
+     * This can be mocked by tests
+     *
+     * @return the current date
+     */
     public Date getCurrentTime(){
         return new Date();
     }
