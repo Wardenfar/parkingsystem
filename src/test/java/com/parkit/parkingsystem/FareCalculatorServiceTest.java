@@ -34,7 +34,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false);
         assertEquals(price, Fare.CAR_RATE_PER_HOUR);
     }
 
@@ -44,7 +44,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
         assertEquals(price, Fare.BIKE_RATE_PER_HOUR);
     }
 
@@ -55,7 +55,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
         assertThrows(NullPointerException.class, () ->
-                fareCalculatorService.calculateFare(inTime, outTime, null));
+                fareCalculatorService.calculateFare(inTime, outTime, null, false));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
         assertThrows(IllegalArgumentException.class, () ->
-                fareCalculatorService.calculateFare(null, outTime, ParkingType.CAR));
+                fareCalculatorService.calculateFare(null, outTime, ParkingType.CAR, false));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
 
         assertThrows(IllegalArgumentException.class, () ->
-                fareCalculatorService.calculateFare(inTime, null, ParkingType.CAR));
+                fareCalculatorService.calculateFare(inTime, null, ParkingType.CAR, false));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("1900/01/02 09:00");
 
         assertThrows(IllegalArgumentException.class, () ->
-                fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE));
+                fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("1900/01/02 09:00");
 
         assertThrows(IllegalArgumentException.class, () ->
-                fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR));
+                fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
         Date outTime = TestUtils.parseTime("2020/01/02 08:45");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
         assertEquals(price, 0.75 * Fare.BIKE_RATE_PER_HOUR);
     }
 
@@ -112,7 +112,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
         Date outTime = TestUtils.parseTime("2020/01/02 08:45");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false);
         assertEquals(price, 0.75 * Fare.CAR_RATE_PER_HOUR);
     }
 
@@ -122,7 +122,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
         Date outTime = TestUtils.parseTime("2020/01/03 08:00");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false);
         assertEquals(price, 24 * Fare.CAR_RATE_PER_HOUR);
     }
 
@@ -132,7 +132,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/02 08:00");
         Date outTime = TestUtils.parseTime("2020/01/03 08:00");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
         assertEquals(price, 24 * Fare.BIKE_RATE_PER_HOUR);
     }
 
@@ -142,7 +142,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/01 08:00");
         Date outTime = TestUtils.parseTime("2020/01/01 08:30");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
         assertEquals(price, 0);
     }
 
@@ -152,7 +152,7 @@ public class FareCalculatorServiceTest {
         Date inTime = TestUtils.parseTime("2020/01/01 08:00");
         Date outTime = TestUtils.parseTime("2020/01/01 08:31");
 
-        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE);
+        double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
         assertTrue(price > 0); // 31 min / 1 Hour
     }
 }

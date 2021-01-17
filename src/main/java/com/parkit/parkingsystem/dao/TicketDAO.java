@@ -65,8 +65,35 @@ public class TicketDAO {
             logger.error("Error fetching next available slot", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
-            return ticket;
         }
+        return ticket;
+    }
+
+    /**
+     * Query the database if a ticket with this reg number exists
+     *
+     * @param vehicleRegNumber the vehicle reg number
+     * @return if the ticket exists
+     */
+    public boolean isRecurrentUser(String vehicleRegNumber) {
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.COUNT_TICKET);
+            ps.setString(1, vehicleRegNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count(t.ID)");
+                return count >= 2; // minimum : the old ticket and the current ticket
+            }
+        } catch (Exception ex) {
+            logger.error("Error checking if ths user is recurrent", ex);
+            return false;
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+
+        return false; // Default : not exists
     }
 
     public boolean updateTicket(Ticket ticket) {

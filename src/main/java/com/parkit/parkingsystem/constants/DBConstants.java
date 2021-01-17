@@ -12,4 +12,11 @@ public class DBConstants {
             "where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=? " +
             "order by t.IN_TIME " +
             "limit 1";
+
+    /**
+     * Query that count the number of ticket by vehicle reg number
+     */
+    public static final String COUNT_TICKET = "select count(t.ID) " +
+            "from ticket t, parking p " +
+            "where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=?";
 }

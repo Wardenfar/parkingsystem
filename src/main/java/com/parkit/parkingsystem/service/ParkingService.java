@@ -131,9 +131,13 @@ public class ParkingService {
             if (ticket == null) {
                 logger.error("Unable to find a ticket with the vehicle number : " + vehicleRegNumber);
             } else {
+                boolean recurrentUser = ticketDAO.isRecurrentUser(vehicleRegNumber);
+                if(recurrentUser){
+                    System.out.println("You are a recurrent user : Thank You !");
+                }
                 Date outTime = getCurrentTime();
                 ticket.setOutTime(outTime);
-                fareCalculatorService.calculateAndSetFare(ticket);
+                fareCalculatorService.calculateAndSetFare(ticket, recurrentUser);
                 if (ticketDAO.updateTicket(ticket)) {
                     ParkingSpot parkingSpot = ticket.getParkingSpot();
                     parkingSpot.setAvailable(true);
@@ -155,7 +159,7 @@ public class ParkingService {
      *
      * @return the current date
      */
-    public Date getCurrentTime(){
+    public Date getCurrentTime() {
         return new Date();
     }
 }
