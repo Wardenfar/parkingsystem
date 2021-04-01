@@ -7,7 +7,7 @@ public class Fare {
     // the car price per hour
     public static final double CAR_RATE_PER_HOUR = 1.5;
 
-    // the free time threshold : below this time, the user will not pay
+    // the free time threshold : this time will be subtracted from any ticket time
     public static final double FREE_HOUR_THRESHOLD = 0.5;
 
     // the discount for recurrent users

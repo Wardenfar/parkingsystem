@@ -133,7 +133,7 @@ public class ParkingDataBaseIT {
         assertEquals(ticket.getVehicleRegNumber(), "ABCDEF");
         assertEquals(ticket.getInTime().getTime(), inTime.getTime());
         assertEquals(ticket.getOutTime().getTime(), outTime.getTime());
-        assertEquals(3.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
+        assertEquals((3.5 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 
         // Test the parking spot
         assertNotNull(parkingSpot);
@@ -168,7 +168,7 @@ public class ParkingDataBaseIT {
         assertEquals(ticket.getInTime().getTime(), inTime.getTime());
         assertEquals(ticket.getOutTime().getTime(), outTime.getTime());
 
-        assertEquals(4.5 * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
+        assertEquals((4.5 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
 
         // Test the parking spot
         assertNotNull(parkingSpot);

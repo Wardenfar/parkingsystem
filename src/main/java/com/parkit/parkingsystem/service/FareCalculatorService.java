@@ -48,9 +48,12 @@ public class FareCalculatorService {
         // Convert milliseconds in hours
         float diffHours = diffMs / 1000f / 60f / 60f;
 
-        // The user was in the parking for less or equal than the free threshold
-        if (diffHours <= Fare.FREE_HOUR_THRESHOLD) {
-            return 0.0;
+        // Subtract the Free Time
+        double diffHoursWithFreeTime = diffHours - Fare.FREE_HOUR_THRESHOLD;
+
+        // The difference is minimum 0.0
+        if (diffHoursWithFreeTime < 0) {
+            diffHoursWithFreeTime = 0.0;
         }
 
         // the price without the recurrent discount
@@ -59,10 +62,10 @@ public class FareCalculatorService {
         // The user was in the parking for more than the free threshold
         switch (parkingType) {
             case CAR:   // The price of CAR ticket
-                priceWithoutDiscount = diffHours * Fare.CAR_RATE_PER_HOUR;
+                priceWithoutDiscount = diffHoursWithFreeTime * Fare.CAR_RATE_PER_HOUR;
                 break;
             case BIKE:  // The price of BIKE ticket
-                priceWithoutDiscount = diffHours * Fare.BIKE_RATE_PER_HOUR;
+                priceWithoutDiscount = diffHoursWithFreeTime * Fare.BIKE_RATE_PER_HOUR;
                 break;
             default:    // Error : Unkown Parking Type
                 throw new IllegalArgumentException("Unkown Parking Type");
