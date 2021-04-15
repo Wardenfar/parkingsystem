@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static com.parkit.parkingsystem.service.FareCalculatorService.round;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FareCalculatorServiceTest {
@@ -35,7 +36,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false);
-        assertEquals(price, (1 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR);
+        assertEquals(price, round((1 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR));
     }
 
     @Test
@@ -45,7 +46,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
-        assertEquals(price, (1 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR);
+        assertEquals(price, round((1 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR));
     }
 
     @Test
@@ -103,7 +104,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 08:45");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
-        assertEquals(price, 0.75 * Fare.BIKE_RATE_PER_HOUR - Fare.FREE_HOUR_THRESHOLD);
+        assertEquals(price, round(0.75 * Fare.BIKE_RATE_PER_HOUR - Fare.FREE_HOUR_THRESHOLD));
     }
 
     @Test
@@ -113,7 +114,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 08:45");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false);
-        assertEquals(price, (0.75 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR);
+        assertEquals(price, round((0.75 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR));
     }
 
     @Test
@@ -123,7 +124,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/03 08:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, false);
-        assertEquals(price, (24 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR);
+        assertEquals(price, round((24 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR));
     }
 
     @Test
@@ -133,7 +134,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/03 08:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
-        assertEquals(price, 24 * Fare.BIKE_RATE_PER_HOUR - Fare.FREE_HOUR_THRESHOLD);
+        assertEquals(price, round(24 * Fare.BIKE_RATE_PER_HOUR - Fare.FREE_HOUR_THRESHOLD));
     }
 
     @Test
@@ -143,7 +144,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/01 08:30");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, false);
-        assertEquals(price, 0);
+        assertEquals(price, round(0));
     }
 
     @Test
@@ -163,7 +164,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, true);
-        assertEquals(price, (1 * Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+        assertEquals(price, round((1 * Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT)));
     }
 
     @Test
@@ -173,7 +174,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 09:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
-        assertEquals(price, (Fare.BIKE_RATE_PER_HOUR - Fare.FREE_HOUR_THRESHOLD) * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+        assertEquals(price, round((Fare.BIKE_RATE_PER_HOUR - Fare.FREE_HOUR_THRESHOLD) * (1 - Fare.RECURRENT_DISCOUNT_PERCENT)));
     }
 
     @Test
@@ -183,7 +184,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 08:45");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
-        assertEquals(price, (0.75 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+        assertEquals(price, round((0.75 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT)));
     }
 
     @Test
@@ -193,7 +194,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/02 08:45");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, true);
-        assertEquals(price, (0.75 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+        assertEquals(price, round((0.75 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT)));
     }
 
     @Test
@@ -203,7 +204,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/03 08:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.CAR, true);
-        assertEquals(price, (24 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+        assertEquals(price, round((24 - Fare.FREE_HOUR_THRESHOLD) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT)));
     }
 
     @Test
@@ -213,7 +214,7 @@ public class FareCalculatorServiceTest {
         Date outTime = TestUtils.parseTime("2020/01/03 08:00");
 
         double price = fareCalculatorService.calculateFare(inTime, outTime, ParkingType.BIKE, true);
-        assertEquals(price, (24 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT));
+        assertEquals(price, round((24 - Fare.FREE_HOUR_THRESHOLD) * Fare.BIKE_RATE_PER_HOUR * (1 - Fare.RECURRENT_DISCOUNT_PERCENT)));
     }
 
     @Test

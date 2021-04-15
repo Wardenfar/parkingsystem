@@ -83,6 +83,10 @@ public class FareCalculatorService {
         }
 
         // return the rounded price with two decimals
-        return price;
+        return round(price);
+    }
+
+    public static double round(double price) {
+        return Math.round(price * 100.0) / 100.0;
     }
 }
